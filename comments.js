@@ -1,31 +1,22 @@
-// create web server with nodejs
-// run: node comments.js
-// run: http://localhost:3000
+// Create web server
 
-var http = require('http');
-var fs = require('fs');
+// Create router for comments
+// Create controller for comments
 
-var server = http.createServer(function(req, res) {
-    console.log('request was made: ' + req.url);
-    if (req.url === '/home' || req.url === '/') {
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        fs.createReadStream(__dirname + '/index.html').pipe(res);
-    } else if (req.url === '/contact') {
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        fs.createReadStream(__dirname + '/contact.html').pipe(res);
-    } else if (req.url === '/api/comments') {
-        var comments = [
-            {name: 'John', age: 30},
-            {name: 'Jane', age: 20},
-            {name: 'Sally', age: 40}
-        ];
-        res.writeHead(200, {'Content-Type': 'application/json'});
-        res.end(JSON.stringify(comments));
-    } else {
-        res.writeHead(404, {'Content-Type': 'text/html'});
-        fs.createReadStream(__dirname + '/404.html').pipe(res);
-    }
-});
+// Import express
+const express = require('express');
+// Create router
+const router = express.Router();
+// Import controller
+const commentsController = require('../controllers/commentsController');
 
-server.listen(3000, 'localhost');
-console.log('Now listening to port 3000');
+// Create route
+router.get('/create', commentsController.create);
+router.post('/create', commentsController.store);
+router.get('/:id', commentsController.show);
+router.get('/:id/edit', commentsController.edit);
+router.put('/:id', commentsController.update);
+router.delete('/:id', commentsController.destroy);
+
+// Export router
+module.exports = router;
